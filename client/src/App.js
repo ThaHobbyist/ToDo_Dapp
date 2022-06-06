@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Tasks from "./components/Tasks.jsx";
-import CreateTask from "./components/CreateTask.jsx";
 
 class App extends Component {
   state = {
@@ -28,11 +27,8 @@ class App extends Component {
     if (this.state.loading) return "Loading Drizzle...";
     return (
       <div className="App">
+        <h2>Todo List</h2>
         <Tasks
-          drizzle={this.props.drizzle}
-          drizzleState={this.state.drizzleState}
-        />
-        <CreateTask
           drizzle={this.props.drizzle}
           drizzleState={this.state.drizzleState}
         />

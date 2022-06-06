@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Task from "./Task";
-
+import CreateTask from "./CreateTask";
 class TaskList extends Component {
   state = {
     countKey: null,
@@ -9,7 +9,7 @@ class TaskList extends Component {
   };
 
   componentDidMount() {
-    const { drizzle, drizzleState } = this.props;
+    const { drizzle } = this.props;
     const contract = drizzle.contracts.TodoList;
 
     const countKey = contract.methods["taskCount"].cacheCall();
@@ -24,6 +24,17 @@ class TaskList extends Component {
     const contract = drizzle.contracts.TodoList;
 
     const stackId = contract.methods["toggleCompletion"].cacheSend(_id, {
+      from: drizzleState.accounts[0],
+    });
+
+    this.setState({ stackId });
+  };
+
+  setTask = (value) => {
+    const { drizzle, drizzleState } = this.props;
+    const contract = drizzle.contracts.TodoList;
+
+    const stackId = contract.methods["createTask"].cacheSend(value, {
       from: drizzleState.accounts[0],
     });
 
@@ -49,10 +60,9 @@ class TaskList extends Component {
     const TaskList = TodoList.taskList[this.state.taskKey];
 
     return (
-      <div className="task_component">
-        <h3>Task Component</h3>
+      <div className="task_component p-2">
         <h4>Number of Tasks: {Count && Count.value} </h4>
-        <div className="main">
+        <div className="main m-2">
           {TaskList &&
             TaskList.value.map((task) => {
               return (
@@ -65,7 +75,13 @@ class TaskList extends Component {
               );
             })}
         </div>
-        <div>{this.getTxnStatus()}</div>
+        <CreateTask
+          className="m-2"
+          drizzle={this.props.drizzle}
+          drizzleState={this.props.drizzleState}
+          onCreateTask={this.setTask}
+        />
+        <div className="m-1">{this.getTxnStatus()}</div>
       </div>
     );
   }
